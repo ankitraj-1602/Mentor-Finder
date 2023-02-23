@@ -26,5 +26,8 @@
     "stripe": "^11.10.0",
     "sweetalert2": "^11.7.1",
     "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "dotenv-webpack": "^8.0.1"
   }
 }

@@ -8,7 +8,8 @@ import Swal from 'sweetalert2'
 import Error from '../components/Error';
 import Loader from '../components/Loader';
 import StripeCheckout from 'react-stripe-checkout'
-
+const MY_STRIPE_SECRET_KEY = process.env.REACT_APP_MY_STRIPE_SECRET_KEY;
+console.log(MY_STRIPE_SECRET_KEY,typeof(MY_STRIPE_SECRET_KEY))
 
 export const BookingScreen = () => {
 
@@ -103,7 +104,7 @@ export const BookingScreen = () => {
               shippingAddress={false}
               billingAddress
               token={onToken}
-              stripeKey='pk_test_51MaGopSFhCpIZmGlGyp94eWqxsSJRUa6dbShfqlSnB1iPiJrImnemizi1RBS8axCUjLIJS6YrSm0VzdvzwVDLlwY0074GakB84'
+              stripeKey={MY_STRIPE_SECRET_KEY}
               currency='INR'
             >
 

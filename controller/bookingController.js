@@ -2,10 +2,12 @@ const mentorModel = require("../models/mentors")
 const { v4: uuidv4 } = require('uuid');
 const nodemailer = require('nodemailer');
 const Booking = require("../models/bookings")
-const stripe = require('stripe')('sk_test_51MaGopSFhCpIZmGlhlYszYWsINAFRVWzTFO9XnjOMcf5USwvOHSHEhiHR9vbgTrAuqUO24uRvRZJsfIQ2kj4ecVv00PgFJjaNf')
+const dotenv = require('dotenv')
+dotenv.config()
 
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
+console.log(process.env.STRIPE_SECRET_KEY)
 
-//function to generate random token id for user and mentor
 function random(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
@@ -130,19 +132,18 @@ const bookMentor = async (req, res) => {
   const { mentor, mentorid, userid, fromdate, todate, totalDays, totalAmt, token, menemail, billadd } = req.body
   try {
     let paymentIntent = null;
-
     let customer = await stripe.customers.create({
       email: token.email,
       source: token.id,
     });
-
+    
     var paymentMethods = await stripe.paymentMethods.list({
       customer: customer.id,
       type: 'card',
     });
-
+    
     let idempotencyKey = uuidv4()
-
+    
     paymentIntent = await stripe.paymentIntents.create({
       description: idempotencyKey,
       receipt_email: "nycankit@gmail.com",
@@ -168,8 +169,9 @@ const bookMentor = async (req, res) => {
       confirm: true,
       off_session: true,
     });
-
+    
     if (paymentIntent) { //if payment is successful then book the mentor and save in db
+      // console.log(process.env.key)
       const randomNum = random(1, 100)
       //above token generated whick will send to the mentor and user
       sendmail(customer.email, randomNum)
